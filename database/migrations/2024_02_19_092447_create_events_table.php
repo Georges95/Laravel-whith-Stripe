@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('content');
-            $table->boolean('premium');
-            $table->timestamps('starts_at');
-            $table->timestamps('ends_at');
+            $table->boolean('premium')->default(false);
+            $table->timestamp('starts_at');
+            $table->timestamp('ends_at');
 
-            $table->foreignIdFor('User::class');
+            $table->foreignIdFor(User::class);
 
             $table->timestamps();
         });
