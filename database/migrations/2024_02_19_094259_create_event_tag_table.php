@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('event_tag', function (Blueprint $table) {
             $table->foreignIdFor(Event::class);
             $table->foreignIdFor(Tag::class);
+
         });
     }
 

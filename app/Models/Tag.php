@@ -12,7 +12,8 @@ class Tag extends Model
 
     protected $guarded = [];
 
-    public function events(){
+    public function events()
+    {
         return $this->belongsToMany(Event::class);
     }
 }

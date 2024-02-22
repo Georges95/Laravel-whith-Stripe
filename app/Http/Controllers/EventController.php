@@ -9,8 +9,9 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function __construct(){
-        $this->middleware('auth', ['only' =>['create', 'store']]);
+    public function __construct()
+    {
+        $this->middleware('auth', ['only' => ['create', 'store']]);
     }
     /**
      * Display a listing of the resource.
@@ -39,29 +40,36 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $authed_user = auth()->user();
+        $amount = 1000;
 
-       $event = $authed_user->events()->create([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title),
-            'content' => $request->content,
-            'premium' => $request->filled('premium'),
-            'starts_at' => $request->starts_at,
-            'ends_at' => $request->ends_at,
-        ]);
+        if($request->filled('premium')) $amount += 500;
+
+        $authed_user->charge('$amount, $request->payment_method');
+
+        $event = $authed_user->events()->create([
+             'title' => $request->title,
+             'slug' => Str::slug($request->title),
+             'content' => $request->content,
+             'premium' => $request->filled('premium'),
+             'starts_at' => $request->starts_at . '20:00:00',
+             'ends_at' => $request->ends_at . '20:00:00',
+         ]);
 
         $tags = explode(',', $request->tags);
 
         foreach ($tags as $inputTag) {
             $inputTag = trim($inputTag);
 
-            $tag = Tag::firstOrCreate([
+            $tag = Tag::firstOrCreate(
+                [
                 'slug' => Str::slug($inputTag)
             ],
-        [
+                [
             'name' => $inputTag
-        ]);
+        ]
+            );
 
-        $event->tags()->attach($tag->id);
+            $event->tags()->attach($tag->id);
 
 
         }

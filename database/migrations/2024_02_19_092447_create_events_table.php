@@ -16,14 +16,13 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
+            $table->foreignIdFor(User::class);
             $table->text('content');
             $table->boolean('premium')->default(false);
             $table->timestamp('starts_at');
             $table->timestamp('ends_at');
-
-            $table->foreignIdFor(User::class);
-
             $table->timestamps();
+
         });
     }
 
